@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Bracelet Information{% endblock %}
+
+{% block body %}
+<div class="container">
+    <h1>Bracelet Information</h1>
+
+    {{ form_start(form) }}
+    <div class="form-group">
+        {{ form_label(form.identificationCode) }}
+        {{ form_widget(form.identificationCode, {'attr': {'class': 'form-control'}}) }}
+    </div>
+
+    <div class="form-group">
+        {{ form_label(form.temperature) }}
+        {{ form_widget(form.temperature, {'attr': {'class': 'form-control'}}) }}
+    </div>
+
+    <div class="form-group">
+        {{ form_label(form.bloodPressure) }}
+        {{ form_widget(form.bloodPressure, {'attr': {'class': 'form-control'}}) }}
+    </div>
+
+    <div class="form-group">
+        {{ form_label(form.heartRate) }}
+        {{ form_widget(form.heartRate, {'attr': {'class': 'form-control'}}) }}
+    </div>
+
+    <div class="form-group">
+        {{ form_label(form.movement) }}
+        {{ form_widget(form.movement, {'attr': {'class': 'form-control'}}) }}
+    </div>
+
+    <div class="form-group">
+        {{ form_label(form.gps) }}
+        {{ form_widget(form.gps, {'attr': {'class': 'form-control'}}) }}
+    </div>
+
+    <button type="submit" class="btn btn-primary">Save</button>
+    {{ form_end(form) }}
+</div>
+{% endblock %}

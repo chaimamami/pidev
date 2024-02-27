@@ -1,0 +1,18 @@
+{# templates/health_professional/choose_dashboard_type.html.twig #}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Health Professional Workspace{% endblock %}
+
+{% block body %}
+  <h1>Health Professional Workspace</h1>
+
+  {{ form_start(form) }}
+  <div class="form-group">
+    {{ form_label(form.dashboardType, 'Dashboard Type') }}
+    {{ form_widget(form.dashboardType, {'attr': {'class': 'form-control'}}) }}
+    {{ form_errors(form.dashboardType) }}
+  </div>
+  <button type="submit" class="btn btn-primary">Select</button>
+  {{ form_end(form) }}
+{% endblock %}
