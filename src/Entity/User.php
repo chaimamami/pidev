@@ -43,10 +43,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'patientUserId', targetEntity: Appointment::class)]
     private Collection $appointments;
 
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: BiologicalData::class)]
+    private Collection $biologicalData;
+
     public function __construct()
     {
         $this->professionalAccesses = new ArrayCollection();
         $this->appointments = new ArrayCollection();
+        $this->biologicalData = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -214,6 +218,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
+    }
+
+    /**
+     * @return Collection<int, BiologicalData>
+     */
+    public function getBiologicalData(): Collection
+    {
+        return $this->biologicalData;
+    }
+
+    public function addBiologicalData(BiologicalData $biologicalData): static
+    {
+        if (!$this->biologicalData->contains($biologicalData)) {
+            $this->biologicalData->add($biologicalData);
+            $biologicalData->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBiologicalData(BiologicalData $biologicalData): static
+    {
+        if ($this->biologicalData->removeElement($biologicalData)) {
+            // set the owning side to null (unless already changed)
+            if ($biologicalData->getUser() === $this) {
+                $biologicalData->setUser(null);
+            }
+        }
+
+        return $this;
     }
 
    

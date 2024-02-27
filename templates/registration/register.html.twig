@@ -2,6 +2,15 @@
 
 {% block title %}Register{% endblock %}
 
+{% block styles %}
+    {{ parent() }}
+    <style>
+        input[type="password"]:invalid {
+            box-shadow: none;
+        }
+    </style>
+{% endblock %}
+
 {% block body %}
     <h1>Register</h1>
 
@@ -10,7 +19,11 @@
         {{ form_row(registrationForm.lastName) }}
         {{ form_row(registrationForm.email) }}
         {{ form_row(registrationForm.plainPassword, {
-            label: 'Password'
+            label: 'Password',
+            attr: {
+                pattern: '^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,}$',
+                title: 'Password must contain at least one uppercase letter, one lowercase letter, and one digit, and be at least 6 characters long.'
+            }
         }) }}
         {{ form_row(registrationForm.confirmPassword, {
             label: 'Confirm Password'

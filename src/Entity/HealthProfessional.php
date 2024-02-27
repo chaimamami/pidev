@@ -39,11 +39,15 @@ class HealthProfessional
     #[ORM\Column(length: 255)]
     private ?string $dashboardType = null;
 
+    #[ORM\OneToMany(mappedBy: 'healthProfessional', targetEntity: BiologicalData::class)]
+    private Collection $biologicalData;
+
     
     public function __construct()
     {
         $this->professionalAccesses = new ArrayCollection();
         $this->appointments = new ArrayCollection();
+        $this->biologicalData = new ArrayCollection();
     }
 
     
@@ -183,6 +187,36 @@ class HealthProfessional
     public function setDashboardType(string $dashboardType): static
     {
         $this->dashboardType = $dashboardType;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, BiologicalData>
+     */
+    public function getBiologicalData(): Collection
+    {
+        return $this->biologicalData;
+    }
+
+    public function addBiologicalData(BiologicalData $biologicalData): static
+    {
+        if (!$this->biologicalData->contains($biologicalData)) {
+            $this->biologicalData->add($biologicalData);
+            $biologicalData->setHealthProfessional($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBiologicalData(BiologicalData $biologicalData): static
+    {
+        if ($this->biologicalData->removeElement($biologicalData)) {
+            // set the owning side to null (unless already changed)
+            if ($biologicalData->getHealthProfessional() === $this) {
+                $biologicalData->setHealthProfessional(null);
+            }
+        }
 
         return $this;
     }

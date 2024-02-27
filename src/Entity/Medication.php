@@ -25,6 +25,9 @@ class Medication
     #[ORM\Column(length: 255)]
     private ?string $dosage = null;
 
+    #[ORM\ManyToOne(inversedBy: 'medication')]
+    private ?BiologicalData $biologicalData = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -74,6 +77,18 @@ class Medication
     public function setDosage(string $dosage): static
     {
         $this->dosage = $dosage;
+
+        return $this;
+    }
+
+    public function getBiologicalData(): ?BiologicalData
+    {
+        return $this->biologicalData;
+    }
+
+    public function setBiologicalData(?BiologicalData $biologicalData): static
+    {
+        $this->biologicalData = $biologicalData;
 
         return $this;
     }

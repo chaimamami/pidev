@@ -46,6 +46,7 @@ class RegistrationFormType extends AbstractType
                     'placeholder' => 'e.g. John',
                 ],
                 'required' => false,
+                'invalid_message' => null, 
             ])
             ->add('lastName', null, [
                 'constraints' => [
@@ -60,6 +61,7 @@ class RegistrationFormType extends AbstractType
                     'placeholder' => 'e.g. Doe',
                 ],
                 'required' => false,
+                'invalid_message' => null, 
             ])
             ->add('email', null, [
                 'constraints' => [
@@ -73,18 +75,29 @@ class RegistrationFormType extends AbstractType
                     'placeholder' => 'e.g. john@example.com',
                 ],
                 'required' => false,
+                'invalid_message' => null, 
             ])
             ->add('plainPassword', PasswordType::class, [
                 'mapped' => false,
+                'required' => true, // Rendre le champ obligatoire
+                'invalid_message' => null, // Supprimer le message HTML5
+                'label' => 'New password',
+                'attr' => [
+                    'placeholder' => 'New password'],
                 'constraints' => [
                     new Assert\NotBlank(),
                     new Assert\Length(['min' => 6, 'max' => 4096]),
+                    new Assert\Regex([
+                        'pattern' => '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/',
+                        'message' => 'The password must contain at least one uppercase letter, one lowercase letter, and one digit.',
+                    ]),
                 ],
             ])
             ->add('confirmPassword', PasswordType::class, [
-                'required' => false,
+                'required' => true, // Rendre le champ obligatoire
                 'label' => 'Confirm Password',
                 'mapped' => false,
+                'invalid_message' => null,
                 'constraints' => [
                     new Assert\NotBlank(),
                 ],
@@ -95,10 +108,13 @@ class RegistrationFormType extends AbstractType
             ->add('profilePicture', FileType::class, [
                 'label' => 'Profile Picture',
                 'mapped' => false,
-                'required' => false,
+                'required' => false, // Garder le champ facultatif
+                'invalid_message' => null, 
             ])
+
             ->add('agreeTerms', CheckboxType::class, [
                 'mapped' => false,
+                'invalid_message' => null, 
                 'constraints' => [
                     new Assert\IsTrue([
                         'message' => 'You should agree to our terms.',
@@ -119,12 +135,14 @@ class RegistrationFormType extends AbstractType
                     ]),
                 ],
                 'required' => True,
+                'invalid_message' => null, 
             ]);
 
         $isBraceletRequired = $options['bracelet_required'];
 
         $builder->add('bracelet', null, [
             'label' => 'Bracelet ID',
+            'invalid_message' => null,
             'required' => True,
             'attr' => [
                 'placeholder' => 'Enter Bracelet ID',

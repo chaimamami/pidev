@@ -1,0 +1,50 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}BiologicalData{% endblock %}
+
+{% block body %}
+    <h1>BiologicalData</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ biological_datum.id }}</td>
+            </tr>
+            <tr>
+                <th>Timestamp</th>
+                <td>{{ biological_datum.timestamp ? biological_datum.timestamp|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>MeasurementType</th>
+                <td>{{ biological_datum.measurementType }}</td>
+            </tr>
+            <tr>
+                <th>Value</th>
+                <td>{{ biological_datum.value }}</td>
+            </tr>
+            {# Afficher les données du bracelet #}
+            {% if bracelet_data %}
+                <tr>
+                    <th>Bracelet Data</th>
+                    <td>
+                        Temperature: {{ bracelet_data.temperature }}<br>
+                        Blood Pressure: {{ bracelet_data.bloodPressure }}<br>
+                        Heart Rate: {{ bracelet_data.heartRate }}<br>
+                        Movement: {{ bracelet_data.movement }}<br>
+                        GPS: {{ bracelet_data.gps }}<br>
+                        Latitude: {{ bracelet_data.latitude }}<br>
+                        Longitude: {{ bracelet_data.longitude }}<br>
+                        {# Afficher d'autres attributs du bracelet si nécessaire #}
+                    </td>
+                </tr>
+            {% endif %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_biological_data_index') }}">back to list</a>
+
+    <a href="{{ path('app_biological_data_edit', {'id': biological_datum.id}) }}">edit</a>
+
+    {{ include('biological_data/_delete_form.html.twig') }}
+{% endblock %}
