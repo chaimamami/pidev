@@ -1,5 +1,4 @@
 <?php
-
 // src/Controller/BraceletController.php
 
 namespace App\Controller;
@@ -8,6 +7,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\RedirectResponse; // Importer la classe RedirectResponse
 use App\Entity\Bracelet;
 use App\Form\BraceletType;
 
@@ -41,9 +41,16 @@ class BraceletController extends AbstractController
         $movement = $entityManager->getRepository(Bracelet::class)->findMovement();
         $bracelet->setMovement($movement);
 
-        // Exemple : récupération du GPS à partir de la base de données
-        $gps = $entityManager->getRepository(Bracelet::class)->findGps();
-        $bracelet->setGps($gps);
+        $latitude = $entityManager->getRepository(Bracelet::class)->findGps();
+        $bracelet->setlatitude($latitude);
+
+          
+          $longitude = $entityManager->getRepository(Bracelet::class)->findGps();
+          $bracelet->setlongitude($longitude);
+
+          $gps = $entityManager->getRepository(Bracelet::class)->findGps();
+          $bracelet->setGps($longitude);
+
 
         // Création du formulaire et liaison avec l'objet Bracelet
         $form = $this->createForm(BraceletType::class, $bracelet);
@@ -53,7 +60,15 @@ class BraceletController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             // Traitement du formulaire (sauvegarde en base de données, etc.)
             // ...
+
+            /// Redirection vers le tableau de bord du propriétaire avec les données du bracelet
+            $url = $this->generateUrl('app_owner_dashboard', [
+                // Passer le code d'identification à travers la redirection
+                'identificationCode' => $identificationCode,
+            ]);
+            return new RedirectResponse($url);
         }
+    
 
         // Affichage du formulaire dans le template
         return $this->render('bracelet/index.html.twig', [

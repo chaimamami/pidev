@@ -1,5 +1,4 @@
 <?php
-
 // RegistrationFormType.php
 namespace App\Form;
 
@@ -33,7 +32,7 @@ class RegistrationFormType extends AbstractType
         $builder
             ->add('firstName', null, [
                 'constraints' => [
-                    new Assert\NotBlank(),
+                    new Assert\NotBlank(['message' => 'Please enter your first name.']),
                     new Assert\Length(['max' => 255]),
                     new Assert\Regex([
                         'pattern' => '/^[a-zA-Z]+$/',
@@ -43,11 +42,10 @@ class RegistrationFormType extends AbstractType
                 'attr' => [
                     'placeholder' => 'e.g. John',
                 ],
-                'required' => false,
             ])
             ->add('lastName', null, [
                 'constraints' => [
-                    new Assert\NotBlank(),
+                    new Assert\NotBlank(['message' => 'Please enter your last name.']),
                     new Assert\Length(['max' => 255]),
                     new Assert\Regex([
                         'pattern' => '/^[a-zA-Z]+$/',
@@ -57,11 +55,10 @@ class RegistrationFormType extends AbstractType
                 'attr' => [
                     'placeholder' => 'e.g. Doe',
                 ],
-                'required' => false,
             ])
             ->add('email', null, [
                 'constraints' => [
-                    new Assert\NotBlank(),
+                    new Assert\NotBlank(['message' => 'Please enter your email address.']),
                     new Assert\Email([
                         'message' => 'The email "{{ value }}" is not a valid email.',
                     ]),
@@ -70,21 +67,19 @@ class RegistrationFormType extends AbstractType
                 'attr' => [
                     'placeholder' => 'e.g. john@example.com',
                 ],
-                'required' => false,
             ])
             ->add('plainPassword', PasswordType::class, [
                 'mapped' => false,
                 'constraints' => [
-                    new Assert\NotBlank(),
+                    new Assert\NotBlank(['message' => 'Please enter a password.']),
                     new Assert\Length(['min' => 6, 'max' => 4096]),
                 ],
             ])
             ->add('confirmPassword', PasswordType::class, [
-                'required' => false,
                 'label' => 'Confirm Password',
                 'mapped' => false,
                 'constraints' => [
-                    new Assert\NotBlank(),
+                    new Assert\NotBlank(['message' => 'Please confirm your password.']),
                 ],
                 'attr' => [
                     'placeholder' => 'Confirm your password',
@@ -93,7 +88,9 @@ class RegistrationFormType extends AbstractType
             ->add('profilePicture', FileType::class, [
                 'label' => 'Profile Picture',
                 'mapped' => false,
-                'required' => false,
+                'constraints' => [
+                    new Assert\NotBlank(['message' => 'Please upload your profile picture.']),
+                ],
             ])
             ->add('agreeTerms', CheckboxType::class, [
                 'mapped' => false,
@@ -111,12 +108,11 @@ class RegistrationFormType extends AbstractType
                     'Healthcare Professional' => 'ROLE_HEALTHCARE_PROFESSIONAL',
                 ],
                 'constraints' => [
-                    new Assert\NotBlank(),
+                    new Assert\NotBlank(['message' => 'Please select your role.']),
                     new Assert\Choice([
                         'choices' => ['ROLE_OWNER', 'ROLE_FAMILY_MEMBER', 'ROLE_HEALTHCARE_PROFESSIONAL'],
                     ]),
                 ],
-                'required' => false,
             ]);
 
         $isBraceletRequired = $options['bracelet_required'];
@@ -126,6 +122,9 @@ class RegistrationFormType extends AbstractType
             'required' => $isBraceletRequired,
             'attr' => [
                 'placeholder' => 'Enter Bracelet ID',
+            ],
+            'constraints' => [
+                new Assert\NotBlank(['message' => 'Please enter the bracelet ID.']),
             ],
         ]);
 
@@ -145,6 +144,11 @@ class RegistrationFormType extends AbstractType
         $resolver->setDefaults([
             'data_class' => User::class,
             'bracelet_required' => false,
+            'error_mapping' => [
+                // Supprime la génération automatique des messages de validation HTML5
+                // pour chaque champ du formulaire
+                'extraFields' => '',
+            ],
         ]);
     }
 

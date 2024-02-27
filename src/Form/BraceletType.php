@@ -18,8 +18,11 @@ class BraceletType extends AbstractType
             ->add('heartRate')
             ->add('movement')
             ->add('gps')
+            ->add('latitude')
+            ->add('longitude')
             ->add('biologicalData')
             ->add('alert')
+
         ;
     }
 

@@ -1,13 +1,167 @@
-{# templates/owner/app_owner_dashboard.html.twig #}
-
 {% extends 'base.html.twig' %}
 
 {% block title %}Owner Dashboard{% endblock %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .custom-table {
+            background-color: #e9f5fc;
+            border-collapse: separate;
+            border-spacing: 0;
+            width: 100%;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .custom-table th, .custom-table td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        .custom-table th {
+            background-color: #3498db;
+            color: white;
+        }
+        .center-content {
+            text-align: center;
+        }
+        .container {
+            margin-top: 50px;
+        }
+        .hidden {
+            display: none;
+        }
+        .edit-button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+    </style>
+{% endblock %}
+
 {% block body %}
-    <div class="container">
+    <div class="container center-content">
         <h2>Welcome to the Owner Dashboard</h2>
-        <p>Here you can manage your properties, view reports, and perform other owner-specific actions.</p>
-        <!-- Add more content specific to the owner dashboard -->
+        <p class="lead">Here you can manage your properties, view reports, and perform other owner-specific actions.</p>
+        
+        <div id="userForm">
+            <h3 class="mt-5">Enter User Information</h3>
+            <form id="userInfoForm">
+                <div class="form-group">
+                    <label for="firstName">First Name:</label>
+                    <input type="text" id="firstName" name="firstName" required>
+                    <button type="button" class="edit-button" onclick="editField('firstName')">Edit</button>
+                </div>
+                <div class="form-group">
+                    <label for="lastName">Last Name:</label>
+                    <input type="text" id="lastName" name="lastName" required>
+                    <button type="button" class="edit-button" onclick="editField('lastName')">Edit</button>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" required>
+                    <button type="button" class="edit-button" onclick="editField('email')">Edit</button>
+                </div>
+                <div class="form-group">
+                    <label for="phone">Phone Number:</label>
+                    <input type="tel" id="phone" name="phone" required>
+                    <button type="button" class="edit-button" onclick="editField('phone')">Edit</button>
+                </div>
+                <div class="form-group">
+                    <label for="image">Image:</label>
+                    <input type="file" id="image" name="image" accept="image/*" required>
+                    <button type="button" class="edit-button" onclick="editField('image')">Edit</button>
+                </div>
+                <button type="button" onclick="showUserInfo()">Show User Information</button>
+            </form>
+        </div>
+        
+        <div id="userInfo" class="hidden">
+            <h3 class="mt-5">User Information</h3>
+            <p id="displayFirstName"></p>
+            <p id="displayLastName"></p>
+            <p id="displayEmail"></p>
+            <p id="displayPhone"></p>
+            <img id="displayImage" src="" alt="User Image">
+        </div>
+
+        <h3 class="mt-5">Bracelet Information</h3>
+        <strong>Code: <span id="code">{{ code }}</span></strong>
+        <button onclick="changeCode()">Change Code</button>
+        <table class="custom-table mt-3">
+            <thead>
+                <tr>
+                    <th>Temperature</th>
+                    <th>Blood Pressure</th>
+                    <th>Heart Rate</th>
+                    <th>Movement</th>
+                    <th>latitude</th>
+                    <th>longitude</th>
+                    <th>GPS</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for bracelet in braceletData %}
+                    <tr>
+                        <td>{{ bracelet.temperature }}</td>
+                        <td>{{ bracelet.bloodPressure }}</td>
+                        <td>{{ bracelet.heartRate }}</td>
+                        <td>{{ bracelet.movement }}</td>
+                        <td>{{ bracelet.latitude }}</td>
+                        <td>{{ bracelet.longitude }}</td>
+                        <td>{{ bracelet.gps }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
+    
+    <script>
+        function showUserInfo() {
+            document.getElementById("userInfo").classList.remove("hidden");
+            document.getElementById("userForm").classList.add("hidden");
+
+            document.getElementById("displayFirstName").innerText = "First Name: " + document.getElementById("firstName").value;
+            document.getElementById("displayLastName").innerText = "Last Name: " + document.getElementById("lastName").value;
+            document.getElementById("displayEmail").innerText = "Email: " + document.getElementById("email").value;
+            document.getElementById("displayPhone").innerText = "Phone Number: " + document.getElementById("phone").value;
+
+            var fileInput = document.getElementById('image');
+            var file = fileInput.files[0];
+            var reader = new FileReader();
+            reader.onloadend = function () {
+                document.getElementById("displayImage").src = reader.result;
+            };
+            if (file) {
+                reader.readAsDataURL(file);
+            } else {
+                document.getElementById("displayImage").src = "";
+            }
+        }
+
+        function editField(field) {
+            document.getElementById("userInfo").classList.add("hidden");
+            document.getElementById("userForm").classList.remove("hidden");
+            document.getElementById(field).focus();
+        }
+
+        function changeCode() {
+            var newCode = generateNewCode();
+            document.getElementById('code').innerText = newCode;
+            alert("Code changed to: " + newCode);
+        }
+
+        function generateNewCode() {
+            var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+            var codeLength = 8;
+            var newCode = '';
+            for (var i = 0; i < codeLength; i++) {
+                newCode += characters.charAt(Math.floor(Math.random() * characters.length));
+            }
+            return newCode;
+        }
+    </script>
 {% endblock %}
